@@ -45,6 +45,7 @@ input[type=text] {
 .image-button {
     border: none;
     background: none;
+    cursor: pointer;
 }
 
 #search-button {
@@ -58,34 +59,39 @@ input[type=text] {
 .calendar-header {
     margin: 12px 0;
 }
-.calendar-header > * {
+.calendar-month,
+#today-button {
+    display: inline-block;
+    vertical-align: middle;
+    height: 19px;
+    border-radius: 4px;
+    box-shadow: 0 0 3px #666;
+}
+.calendar-month * {
     vertical-align: middle;
 }
-#calendar-month {
-    font-weight: bold;
-    margin: 0 3px;
-}
-
-#prev-month-button,
-#next-month-button,
-#today-button {
-	display: inline-block;
-	height: 17px;
-    line-height: 17px;
-	box-shadow: 0 0 3px #666;
-	border-radius: 2px;
-}
 #prev-month-button {
-	width: 17px;
-	background: url('img/left.png') center center no-repeat;
+    display: inline-block;
+    width: 19px;
+    height: 19px;
+    background: url('img/left.png') center center no-repeat;
+    border-right: 1px solid #d3d3d3;
 }
 #next-month-button {
-	width: 17px;
-	background: url('img/right.png') center center no-repeat;
+    display: inline-block;
+    width: 19px;
+    height: 19px;
+    background: url('img/right.png') center center no-repeat;
+    border-left: 1px solid #d3d3d3;
+}
+#calendar-month {
+    display: inline-block;
+    width: 120px;
+    text-align: center;
 }
 #today-button {
     margin-left: 9px;
-	padding: 0 5px;
+    padding: 0 5px;
     color: #666;
 }
 

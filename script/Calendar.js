@@ -28,3 +28,15 @@ Calendar.prototype.setMonth = function(date) {
 	this.month = new Date(date.getFullYear(), date.getMonth(), 1);
 	this.monthName.text(CalendarUtils.getMonthName(this.month.getMonth()) + " " + this.month.getFullYear());
 };
+
+Calendar.prototype.prevMonth = function() {
+	if (this.month == null)
+		throw "Calendar is not initialized";
+	this.setMonth(Dates.prevMonth(this.month));
+};
+
+Calendar.prototype.nextMonth = function() {
+	if (this.month == null)
+		throw "Calendar is not initialized";
+	this.setMonth(Dates.nextMonth(this.month));
+};
