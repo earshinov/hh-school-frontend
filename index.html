@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<title>Календарь</title>
+<link rel="stylesheet" href="style.css"></link>
+<script src="script/jquery.js"></script>
+<script src="script/app.js"></script>
+<div class="header">
+	<div class="width-limit">
+		<div class="buttons">
+			<button class="text-button" id="add-button">Добавить
+			<button class="text-button" id="refresh-button">Обновить</button>
+		</div>
+		<div class="search">
+			<button class="image-button" id="search-button"></button>
+			<input type="text" id="search-text" size="28" placeholder="Событие, дата или участник"/>
+		</div>
+	</div>
+</div>
+<div class="width-limit">
+	<div class="body">
+		<div class="calendar-header">
+			<button class="image-button" id="prev-month-button"></button>
+			<span id="calendar-month"></span>
+			<button class="image-button" id="next-month-button"></button>
+			<button class="image-button" id="today-button">Сегодня</button>
+		</div>
+		<table id="calendar-table"/>
+	</div>
+</div>
