@@ -1,5 +1,8 @@
 $( function() {
 
+	/* поддержка placeholder'ов для IE */
+	$(":text,textarea").placeholder();
+
 	var storage = new Storage();
 
 	var calendar = new Calendar(storage,
