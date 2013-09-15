@@ -25,10 +25,18 @@ $( function() {
 	$("#calendar-table")
 		.bind("event-add", function(e, data) {
 			var event = new EventData(data.date, "", [], "");
+
+			// проставляем класс, чтобы оставить видимой кнопку добавления события
+			var cell = $(e.target).parents("td:first");
+			cell.addClass("hover");
+
 			eventEditorPopup.show($(e.target), event, {
 				onOK: function(event, originalEvent) {
 					storage.addEvent(event);
 					calendar.updateCell(event.date);
+				},
+				onHide: function() {
+					cell.removeClass("hover");
 				}
 			});
 		})

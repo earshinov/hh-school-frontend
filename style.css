@@ -142,7 +142,7 @@ input.invalid[type=text] {
     display: none;
 }
 #calendar-table td:hover .add-event-button,
-#calendar-table td.active .add-event-button {
+#calendar-table td.hover .add-event-button {
     display: inline-block;
 }
 
