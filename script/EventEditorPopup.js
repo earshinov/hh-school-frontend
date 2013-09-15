@@ -81,7 +81,7 @@ EventEditorPopup.prototype._remove = function() {
 };
 
 /* Получить объект EventData с данными, введёнными в попапе */
-EventEditorPopup.prototype._getEvent = function(validate) {
+EventEditorPopup.prototype._getEvent = function() {
 	return new EventData(
 		Dates.parse(this.popup.find(".date-text").val()),
 		this.popup.find(".event-name-text").val(),

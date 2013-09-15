@@ -23,12 +23,12 @@ if (!String.prototype.startsWith)
 
 if (!String.prototype.trim)
 	String.prototype.trim = function() {
-		return this.replace(/^\s+/, '').replace('\s+$', '');
+		return this.replace(/^\s+/, "").replace(/\s+$/, "");
 	};
 
 if (!String.prototype.trimLeft)
 	String.prototype.trimLeft = function() {
-		return this.replace(/^\s+/, '');
+		return this.replace(/^\s+/, "");
 	};
 
 
@@ -56,7 +56,7 @@ var Utils = {
 				return false;
 		return true;
 	}
-}
+};
 
 
 /* Вспомогательные функции для работы с датами */

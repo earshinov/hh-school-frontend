@@ -56,7 +56,7 @@ $( function() {
 				onOK: function(event, originalEvent) {
 					storage.updateEvent(originalEvent, event);
 					calendar.updateCell(originalEvent.date);
-					if (event.date.valueOf() !== originalEvent.date.valueOf())
+					if (event.date.valueOf() != originalEvent.date.valueOf())
 						calendar.updateCell(event.date);
 				},
 				onRemove: function(event) {

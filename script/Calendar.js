@@ -66,7 +66,7 @@ Calendar.prototype.nextMonth = function() {
 Calendar.prototype.updateCell = function(date, cell) {
 	if (cell === undefined) {
 		cell = this.cellByDate(date);
-		if (cell === null)
+		if (cell == null)
 			return;
 	}
 

@@ -12,7 +12,7 @@ var CalendarUtils = {
 
 		date = new Date(date.getFullYear(), date.getMonth(), 1);
 
-		if (date.getDay() !== this.START_DAY) {
+		if (date.getDay() != this.START_DAY) {
 			/* переход к последнему дню предыдущего месяца */
 			date.setDate(0);
 
@@ -23,7 +23,7 @@ var CalendarUtils = {
 			date.setDate(date.getDate() - diff);
 
 			/* даты предыдущего месяца */
-			while (date.getDate() !== 1) {
+			while (date.getDate() != 1) {
 				days.push(Dates.clone(date));
 				date.setDate(date.getDate() + 1);
 			}
@@ -31,8 +31,8 @@ var CalendarUtils = {
 
 		/* даты текущего месяца */
 		var month = date.getMonth();
-		while (date.getMonth() === month) {
-			if (date.getDay() === this.START_DAY) {
+		while (date.getMonth() == month) {
+			if (date.getDay() == this.START_DAY) {
 				days = [];
 				weeks.push(days);
 			}
@@ -41,7 +41,7 @@ var CalendarUtils = {
 		}
 
 		/* даты следующего месяца */
-		while (date.getDay() !== this.START_DAY) {
+		while (date.getDay() != this.START_DAY) {
 			days.push(Dates.clone(date));
 			date.setDate(date.getDate() + 1);
 		}

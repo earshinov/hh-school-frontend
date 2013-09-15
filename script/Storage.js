@@ -12,7 +12,7 @@ Storage.prototype.addEvent = function(event) {
 };
 
 Storage.prototype.updateEvent = function(originalEvent, event) {
-	if (event.date.valueOf() !== originalEvent.date.valueOf()) {
+	if (event.date.valueOf() != originalEvent.date.valueOf()) {
 		this.removeEvent(originalEvent);
 		this.addEvent(event);
 		return;
@@ -52,9 +52,7 @@ Storage.prototype._readLocalStorage = function() {
 			if (key.startsWith("events.")) {
 				var ts = parseInt(key.substring(7), 10);
 				try {
-					this.events[ts] = $.map(JSON.parse(localStorage[key]), function(event) {
-						return EventData.deserialize(event);
-					});
+					this.events[ts] = $.map(JSON.parse(localStorage[key]), EventData.deserialize);
 				}
 				catch(e) {
 					continue;
