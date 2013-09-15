@@ -5,7 +5,7 @@ function EventEditorPopup(popupController, $popup, okHandler) {
 	this.okHandler = okHandler;
 
 	/* копия редактируемого события */
-	this.event = null;
+	this.originalEvent = null;
 
 	this.popup.keypress(function(e) {
 		if (e.which == 13 /* Enter */) {
@@ -24,7 +24,7 @@ inherit(EventEditorPopup, Popup);
 EventEditorPopup.prototype.show = function($cell, $place, event, closeHandler) {
 	Popup.prototype.show.call(this, $place);
 
-	this.event = event;
+	this.originalEvent = event;
 
 	this.popup.find(".event-name-text").val(event.name).removeClass("invalid").focus();
 	this.popup.find(".participants-text").val(event.participants.join(", "));
@@ -32,37 +32,34 @@ EventEditorPopup.prototype.show = function($cell, $place, event, closeHandler) {
 	this.popup.find(".description-text").val(event.description);
 };
 
-EventEditorPopup.prototype._ok = function() {
-	var valid = true;
+EventEditorPopup.prototype.hide = function() {
+	Popup.prototype.hide.call(this);
 
-	var $name = this.popup.find(".event-name-text");
-	if ($name.val())
-		$name.removeClass("invalid");
-	else {
-		$name.addClass("invalid");
-		valid = false;
-	}
-
-	var $date = this.popup.find(".date-text");
-	var date = Dates.parse($date.val());
-	if (date !== null)
-		$date.removeClass("invalid");
-	else {
-		$date.addClass("invalid");
-		valid = false;
-	}
-
-	if (!valid)
-		return;
-
-	var participants = Utils.split(this.popup.find(".participants-text").val(), ",");
-	var event = new EventData(date, $name.val(), participants, this.popup.find(".description-text").val());
-	if (this.okHandler(event) !== false)
-		this.close();
+	this.originalEvent = null;
 };
 
-EventEditorPopup.prototype.close = function() {
-	Popup.prototype.close.call(this);
+EventEditorPopup.prototype.isModified = function() {
+	return ! this.originalEvent.equalsTo(this._getEvent());
+};
 
-	this.event = null;
+EventEditorPopup.prototype._ok = function() {
+	var event = this._getEvent();
+
+	var nameValid = !! event.name;
+	this.popup.find(".event-name-text").toggleClass("invalid", nameValid);
+
+	var dateValid = event.date != null;
+	this.popup.find(".date-text").toggleClass("invalid", dateValid);
+
+	if (nameValid && dateValid && this.okHandler(event) !== false)
+		this.hide();
+};
+
+/* Получить объект EventData с данными, введёнными в попапе */
+EventEditorPopup.prototype._getEvent = function(validate) {
+	return new EventData(
+		Dates.parse(this.popup.find(".date-text").val()),
+		this.popup.find(".event-name-text").val(),
+		Utils.split(this.popup.find(".participants-text").val(), ","),
+		this.popup.find(".description-text").val());
 };

@@ -5,6 +5,13 @@ function Popup(popupController, $popup) {
 	this.popupController = popupController;
 	this.popup = $popup;
 
+	this.popup.keydown(function(e) {
+		if (e.which == 27 /* Esc */) {
+			popup.close();
+			return false;
+		}
+	});
+
 	this.popup.find(".popup-close").click(function() {
 		popup.close();
 	});
@@ -15,8 +22,20 @@ Popup.prototype.show = function($place) {
 	this.popupController.showPopup(this, $place);
 };
 
-/* Функция сокрытия попапа */
+/* Функция, возвращающая признак, что пользователь изменил содержимое попапа */
+Popup.prototype.isModified = function() {
+	return false;
+};
+
+/* Закрыть попап, запросив подтверждение пользователя в случае наличия изменений */
 Popup.prototype.close = function() {
+	if (this.isModified() && !confirm("Внесённые изменения не будут сохранены.  Продолжить?"))
+		return;
+	this.hide();
+};
+
+/* Закрыть попап без подтверждения */
+Popup.prototype.hide = function() {
 	this.popupController.hidePopup();
 };
 
