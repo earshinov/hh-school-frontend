@@ -17,3 +17,17 @@ EventData.prototype.equalsTo = function(other) {
 		&& this.description == other.description
 		&& Utils.arraysEqual(this.participants, other.participants));
 };
+
+EventData.prototype.serialize = function() {
+	var data = $.extend(true, {}, this);
+	data.date = this.date.valueOf();
+	return data;
+};
+
+EventData.deserialize = function(data) {
+	return new EventData(
+		new Date(data.date),
+		data.name,
+		data.participants,
+		data.description);
+};
