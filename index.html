@@ -3,9 +3,11 @@
 <title>Календарь</title>
 <link rel="stylesheet" href="style.css"></link>
 <script src="script/jquery.js"></script>
-<script src="script/Dates.js"></script>
+<script src="script/utils.js"></script>
 <script src="script/CalendarUtils.js"></script>
 <script src="script/Calendar.js"></script>
+<script src="script/PopupController.js"></script>
+<script src="script/EventPopup.js"></script>
 <script src="script/app.js"></script>
 <div class="header">
 	<div class="width-limit">
@@ -28,8 +30,22 @@
 				</span><button class="image-button" id="next-month-button">
 				</button>
 			</div>
-			<button class="image-button" id="today-button">Сегодня</button>
+			<button class="small-text-button" id="today-button">Сегодня</button>
 		</div>
-		<table id="calendar-table"/>
+		<table id="calendar-table"></table>
 	</div>
 </div>
+
+<div id="event-popup" class="popup hidden">
+	<input type="text" class="event-name-text" placeholder="Название события"></input>
+	<input type="text" class="participants-text" placeholder="Имена участников"></input>
+	<textarea class="descriptions-text" placeholder="Описание" rows="5"></textarea>
+	<button class="small-text-button ok-button">Готово</button>
+</div>
+
+<div id="popup-overlay"></div>
+
+<script type="text/template" id="calendar-cell-template">
+	<button class="small-text-button add-event-button">Добавить событие</button>
+</script>
+

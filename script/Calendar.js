@@ -1,6 +1,7 @@
-function Calendar($monthName, $table) {
+function Calendar($monthName, $table, $cellTemplate) {
 	this.monthName = $monthName;
 	this.table = $table;
+	this.cellTemplate = $cellTemplate.html();
 
 	this.month = null; /* месяц, выбранный в календаре */
 }
@@ -21,6 +22,8 @@ Calendar.prototype.setMonth = function(date) {
 			cell.text(this.getDate());
 			if (firstRow)
 				cell.text(CalendarUtils.getDayName(this.getDay()) + ", " + cell.text());
+
+			cell.html(cell.html() + calendar.cellTemplate);
 		});
 		firstRow = false;
 	});
