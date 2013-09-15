@@ -127,13 +127,21 @@ input.invalid[type=text] {
     padding: 10px;
     vertical-align: top;
 }
+#calendar-table .event {
+    font-size: 11px;
+    margin: 5px 0;
+    cursor: pointer;
+}
+#calendar-table .event:hover {
+    text-decoration: underline;
+}
 
 #calendar-table .add-event-button {
     font-size: 10px;
-    margin-top: 5px;
+    margin: 5px 0;
     display: none;
 }
-#calendar-table td.hover .add-event-button,
+#calendar-table td:hover .add-event-button,
 #calendar-table td.active .add-event-button {
     display: inline-block;
 }

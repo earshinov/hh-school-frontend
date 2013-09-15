@@ -20,21 +20,28 @@ $( function() {
 	});
 
 	var popupController = new PopupController($("#popup-overlay"));
+	var eventEditorPopup = new EventEditorPopup(popupController, $("#event-editor-popup"));
 
-	var eventEditorPopup = new EventEditorPopup(popupController, $("#event-editor-popup"), function(event) {
-		storage.addEvent(event);
-		calendar.addEvent(event);
-	});
-
-	$("#calendar-table").delegate('td', 'hover', function(e) {
-		$(this).toggleClass('hover', e.type === 'mouseenter');
-	});
-	$("#calendar-table").delegate('.add-event-button', 'click', function() {
-		var cell = $(this).parents("td:first");
-		var date = calendar.dateByCell(cell);
-		var event = new EventData(date, "", [], "");
-		eventEditorPopup.show(cell, $(this), event);
-	});
+	$("#calendar-table")
+		.bind("event-add", function(e, data) {
+			var event = new EventData(data.date, "", [], "");
+			eventEditorPopup.show($(e.target), event, {
+				onOK: function(event, originalEvent) {
+					storage.addEvent(event);
+					calendar.updateCell(event.date);
+				}
+			});
+		})
+		.bind("event-edit", function(e, data) {
+			eventEditorPopup.show($(e.target), data.event, {
+				onOK: function(event, originalEvent) {
+					storage.updateEvent(originalEvent, event);
+					calendar.updateCell(originalEvent.date);
+					if (event.date.valueOf() !== originalEvent.date.valueOf())
+						calendar.updateCell(event.date);
+				}
+			});
+		});
 
 	/* для доступа из Chrome Developer Tools */
 	window.App = {

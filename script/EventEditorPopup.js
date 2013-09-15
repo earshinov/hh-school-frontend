@@ -1,11 +1,13 @@
-function EventEditorPopup(popupController, $popup, okHandler) {
+function EventEditorPopup(popupController, $popup) {
 	var popup = this;
 
 	Popup.call(this, popupController, $popup);
-	this.okHandler = okHandler;
 
 	/* копия редактируемого события */
 	this.originalEvent = null;
+
+	/* дополнительные параметры, которые передаются при отображении попапа */
+	this.config = null;
 
 	this.popup.keypress(function(e) {
 		if (e.which == 13 /* Enter */) {
@@ -21,10 +23,11 @@ function EventEditorPopup(popupController, $popup, okHandler) {
 
 inherit(EventEditorPopup, Popup);
 
-EventEditorPopup.prototype.show = function($cell, $place, event, closeHandler) {
+EventEditorPopup.prototype.show = function($place, event, config) {
 	Popup.prototype.show.call(this, $place);
 
 	this.originalEvent = event;
+	this.config = config;
 
 	this.popup.find(".event-name-text").val(event.name).removeClass("invalid").focus();
 	this.popup.find(".participants-text").val(event.participants.join(", "));
@@ -33,9 +36,13 @@ EventEditorPopup.prototype.show = function($cell, $place, event, closeHandler) {
 };
 
 EventEditorPopup.prototype.hide = function() {
+	if (this.config && this.config.onHide)
+		this.config.onHide();
+
 	Popup.prototype.hide.call(this);
 
 	this.originalEvent = null;
+	this.config = null;
 };
 
 EventEditorPopup.prototype.isModified = function() {
@@ -46,13 +53,16 @@ EventEditorPopup.prototype._ok = function() {
 	var event = this._getEvent();
 
 	var nameValid = !! event.name;
-	this.popup.find(".event-name-text").toggleClass("invalid", nameValid);
+	this.popup.find(".event-name-text").toggleClass("invalid", ! nameValid);
 
 	var dateValid = event.date != null;
-	this.popup.find(".date-text").toggleClass("invalid", dateValid);
+	this.popup.find(".date-text").toggleClass("invalid", ! dateValid);
 
-	if (nameValid && dateValid && this.okHandler(event) !== false)
+	if (nameValid && dateValid) {
+		if (this.config && this.config.onOK)
+			this.config.onOK(event, this.originalEvent);
 		this.hide();
+	}
 };
 
 /* Получить объект EventData с данными, введёнными в попапе */

@@ -1,4 +1,4 @@
-function Calendar(storage, $table, $monthName, $cellTemplate, $eventTemplate) {
+﻿function Calendar(storage, $table, $monthName, $cellTemplate, $eventTemplate) {
 	this.storage = storage;
 	this.table = $table;
 	this.monthName = $monthName;
@@ -8,6 +8,13 @@ function Calendar(storage, $table, $monthName, $cellTemplate, $eventTemplate) {
 	this.month = null; /* месяц, выбранный в календаре */
 	this.firstDate = null; /* первая дата на странице календаря */
 	this.lastDate = null; /* последняя дата на странице календаря */
+
+	this.table.delegate(".add-event-button", "click", function() {
+		$(this).trigger("event-add", { date: $(this).parents("td:first").data("date") });
+	});
+	this.table.delegate(".event", "click", function() {
+		$(this).trigger("event-edit", { event: $(this).data("event") });
+	});
 }
 
 /* Установить календарь на указанный месяц
@@ -23,23 +30,16 @@ Calendar.prototype.setMonth = function(date) {
 	$.each(weeks, function() {
 		var row = $("<tr/>").appendTo(calendar.table);
 		$.each(this, function() {
-			var cell = $("<td/>").appendTo(row);
-			cell.data("date", this);
 
-			cell.text(this.getDate());
+			var text = this.getDate();
 			if (firstRow)
-				cell.text(Dates.getDayName(this.getDay()) + ", " + cell.text());
+				text = Dates.getDayName(this.getDay()) + ", " + text;
 
-			cell.html(cell.html() + calendar.cellTemplate);
+			var cell = calendar._renderCell(text);
+			cell.data("date", this);
+			cell.appendTo(row);
 
-			var events = calendar.storage.getEventsForDay(this);
-			if (events.length > 0) {
-				var html = "";
-				$.each(events, function() {
-					html += calendar._renderEventHtml(this);
-				});
-				cell.find(".events").html(html);
-			}
+			calendar.updateCell(this, cell);
 		});
 		firstRow = false;
 	});
@@ -63,21 +63,22 @@ Calendar.prototype.nextMonth = function() {
 	this.setMonth(Dates.nextMonth(this.month));
 };
 
-Calendar.prototype.addEvent = function(event) {
-	var cell = this.cellByDate(event.date);
-	if (!cell)
-		return;
+Calendar.prototype.updateCell = function(date, cell) {
+	if (cell === undefined) {
+		cell = this.cellByDate(date);
+		if (cell === null)
+			return;
+	}
 
-	var $events = cell.find(".events");
-	$events.html($events.html() + this._renderEventHtml(event));
-};
+	var calendar = this;
 
-Calendar.prototype._renderEventHtml = function(event) {
-	var html = this.eventTemplate;
-	html = html.replace("{name}", htmlEncode(event.name));
-	html = html.replace("{participants}", htmlEncode(event.participants.join(", ")));
-	html = html.replace("{description}", htmlEncode(event.description));
-	return html;
+	var events = cell.find(".events");
+	events.empty();
+	$.each(this.storage.getEventsForDay(date), function() {
+		var event = calendar._renderEvent(this);
+		event.data("event", this);
+		event.appendTo(events);
+	});
 };
 
 Calendar.prototype.cellByDate = function(date) {
@@ -85,6 +86,16 @@ Calendar.prototype.cellByDate = function(date) {
 	return cell.length > 0 ? cell : null;
 };
 
-Calendar.prototype.dateByCell = function(cell) {
-	return cell.data("date");
+Calendar.prototype._renderCell = function(text) {
+	var html = this.cellTemplate;
+	html = html.replace("{text}", htmlEncode(text));
+	return $(html);
+};
+
+Calendar.prototype._renderEvent = function(event) {
+	var html = this.eventTemplate;
+	html = html.replace("{name}", htmlEncode(event.name));
+	html = html.replace("{participants}", htmlEncode(event.participants.join(", ")));
+	html = html.replace("{description}", htmlEncode(event.description));
+	return $(html).eq(0);
 };

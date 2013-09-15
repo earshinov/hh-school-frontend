@@ -11,7 +11,7 @@ var inherit = function() {
 
 
 function htmlEncode(s) {
-	return s ? s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : s;
+	return (s + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 
