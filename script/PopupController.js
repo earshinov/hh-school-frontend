@@ -1,7 +1,13 @@
 /* Базовый класс попапа */
 function Popup(popupController, $popup) {
+	var popup = this;
+
 	this.popupController = popupController;
 	this.popup = $popup;
+
+	this.popup.find(".popup-close").click(function() {
+		popup.close();
+	});
 }
 
 /* Рекомендация, как писать функцию отображения попапа */

@@ -21,7 +21,7 @@ $( function() {
 
 	var popupController = new PopupController($("#popup-overlay"));
 
-	var eventEditorPopup = new EventEditorPopup(popupController, $("#event-popup"), function(event) {
+	var eventEditorPopup = new EventEditorPopup(popupController, $("#event-editor-popup"), function(event) {
 		storage.addEvent(event);
 		calendar.addEvent(event);
 	});

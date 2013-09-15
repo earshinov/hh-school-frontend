@@ -153,6 +153,14 @@ input.invalid[type=text] {
     padding: 20px;
     width: 260px;
 }
+.popup-close {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 .popup.left:before {
     content: '';
     position: absolute;
@@ -190,13 +198,13 @@ input.invalid[type=text] {
     top: 20px;
 }
 
-#event-popup input[type=text] {
+#event-editor-popup input[type=text] {
     display: block;
     margin: 5px 0;
     box-sizing: border-box;
     width: 100%;
 }
-#event-popup textarea {
+#event-editor-popup textarea {
     display: block;
     margin: 20px 0;
     box-sizing: border-box;
