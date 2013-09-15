@@ -47,6 +47,10 @@ $( function() {
 					calendar.updateCell(originalEvent.date);
 					if (event.date.valueOf() !== originalEvent.date.valueOf())
 						calendar.updateCell(event.date);
+				},
+				onRemove: function(event) {
+					storage.removeEvent(event);
+					calendar.updateCell(event.date);
 				}
 			});
 		});

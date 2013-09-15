@@ -19,6 +19,9 @@ function EventEditorPopup(popupController, $popup) {
 	this.popup.find(".ok-button").click(function() {
 		popup._ok();
 	});
+	this.popup.find(".remove-button").click(function() {
+		popup._remove();
+	});
 }
 
 inherit(EventEditorPopup, Popup);
@@ -33,6 +36,9 @@ EventEditorPopup.prototype.show = function($place, event, config) {
 	this.popup.find(".participants-text").val(event.participants.join(", "));
 	this.popup.find(".date-text").val(Dates.format(event.date)).removeClass("invalid");
 	this.popup.find(".description-text").val(event.description);
+
+	/* кнопка Удалить видима, только если задан соответствующий обработчик */
+	this.popup.find(".remove-button").toggle(!!(this.config && this.config.onRemove));
 };
 
 EventEditorPopup.prototype.hide = function() {
@@ -61,6 +67,14 @@ EventEditorPopup.prototype._ok = function() {
 	if (nameValid && dateValid) {
 		if (this.config && this.config.onOK)
 			this.config.onOK(event, this.originalEvent);
+		this.hide();
+	}
+};
+
+EventEditorPopup.prototype._remove = function() {
+	if (confirm("Вы действительно хотите удалить событие?")) {
+		if (this.config && this.config.onRemove)
+			this.config.onRemove(this.originalEvent);
 		this.hide();
 	}
 };
