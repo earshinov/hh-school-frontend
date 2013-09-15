@@ -68,6 +68,10 @@ textarea {
     cursor: pointer;
 }
 
+input.invalid[type=text] {
+    background: #ffdddd;
+}
+
 #search-button {
     display: inline-block;
     background: url('img/search.png');

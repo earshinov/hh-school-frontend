@@ -1,5 +1,12 @@
 $( function() {
-	var calendar = new Calendar($("#calendar-month"), $("#calendar-table"), $("#calendar-cell-template"));
+
+	var storage = new Storage();
+
+	var calendar = new Calendar(storage,
+		$("#calendar-table"),
+		$("#calendar-month"),
+		$("#calendar-cell-template"),
+		$("#calendar-event-template"));
 	calendar.setMonth(new Date());
 
 	$("#prev-month-button").click(function() {
@@ -14,12 +21,24 @@ $( function() {
 
 	var popupController = new PopupController($("#popup-overlay"));
 
-	var eventPopup = new EventPopup(popupController, $("#event-popup"));
+	var eventEditorPopup = new EventEditorPopup(popupController, $("#event-popup"), function(event) {
+		storage.addEvent(event);
+		calendar.addEvent(event);
+	});
 
-	$("#calendar-table").delegate('td', 'hover', function(event) {
-		$(this).toggleClass('hover', event.type === 'mouseenter');
+	$("#calendar-table").delegate('td', 'hover', function(e) {
+		$(this).toggleClass('hover', e.type === 'mouseenter');
 	});
 	$("#calendar-table").delegate('.add-event-button', 'click', function() {
-		eventPopup.show($(this).parents("td:first"), $(this));
+		var cell = $(this).parents("td:first");
+		var date = calendar.dateByCell(cell);
+		var event = new EventData(date, "", [], "");
+		eventEditorPopup.show(cell, $(this), event);
 	});
+
+	/* для доступа из Chrome Developer Tools */
+	window.App = {
+		storage: storage,
+		calendar: calendar
+	};
 });

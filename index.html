@@ -7,7 +7,9 @@
 <script src="script/CalendarUtils.js"></script>
 <script src="script/Calendar.js"></script>
 <script src="script/PopupController.js"></script>
-<script src="script/EventPopup.js"></script>
+<script src="script/EventEditorPopup.js"></script>
+<script src="script/Storage.js"></script>
+<script src="script/EventData.js"></script>
 <script src="script/app.js"></script>
 <div class="header">
 	<div class="width-limit">
@@ -39,13 +41,18 @@
 <div id="event-popup" class="popup hidden">
 	<input type="text" class="event-name-text" placeholder="Название события"></input>
 	<input type="text" class="participants-text" placeholder="Имена участников"></input>
-	<textarea class="descriptions-text" placeholder="Описание" rows="5"></textarea>
+	<input type="text" class="date-text" placeholder="Дата"></input>
+	<textarea class="description-text" placeholder="Описание" rows="5"></textarea>
 	<button class="small-text-button ok-button">Готово</button>
 </div>
 
 <div id="popup-overlay"></div>
 
 <script type="text/template" id="calendar-cell-template">
+	<div class="events"></div>
 	<button class="small-text-button add-event-button">Добавить событие</button>
 </script>
 
+<script type="text/template" id="calendar-event-template">
+	<div class="event"><strong>{name}</strong><br/>{participants}</div>
+</script>
