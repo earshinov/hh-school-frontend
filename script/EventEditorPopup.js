@@ -27,14 +27,15 @@ function EventEditorPopup(popupController, $popup) {
 inherit(EventEditorPopup, Popup);
 
 EventEditorPopup.prototype.show = function($place, event, config) {
-	Popup.prototype.show.call(this, $place);
+	var placement = config && config.popupPlacement || null;
+	Popup.prototype.show.call(this, $place, placement);
 
 	this.originalEvent = event;
 	this.config = config;
 
 	this.popup.find(".event-name-text").val(event.name).removeClass("invalid").focus();
 	this.popup.find(".participants-text").val(event.participants.join(", "));
-	this.popup.find(".date-text").val(Dates.format(event.date)).removeClass("invalid");
+	this.popup.find(".date-text").val(event.date == null ? "" : Dates.format(event.date)).removeClass("invalid");
 	this.popup.find(".description-text").val(event.description);
 
 	/* кнопка Удалить видима, только если задан соответствующий обработчик */

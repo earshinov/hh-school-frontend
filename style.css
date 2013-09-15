@@ -25,15 +25,19 @@ body, input {
 }
 
 .text-button {
-    background: #0271C7;
     border: none;
-    border-radius: 4px;
     height: 26px;
+
+    background: #0271C7;
+    box-shadow: 0 0 2px rgba(0,0,0,.3);
+    border-radius: 4px;
+
+    padding: 0 10px;
     color: white;
     font-weight: bold;
-    box-shadow: 0 0 2px rgba(0,0,0,.3);
     text-shadow: 0 0 2px black;
-    padding: 0 10px;
+    cursor: pointer;
+
     margin-right: 8px;
 }
 input[type=text] {
@@ -206,6 +210,24 @@ input.invalid[type=text] {
     border-bottom: 10px solid transparent;
     left: -8px;
     top: 20px;
+}
+.popup.bottom:before {
+    content: '';
+    position: absolute;
+    border-bottom: 10px solid #ccc;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    top: -10px;
+    left: 20px;
+}
+.popup.bottom:after {
+    content: '';
+    position: absolute;
+    border-bottom: 10px solid white;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    top: -8px;
+    left: 20px;
 }
 
 #event-editor-popup input[type=text] {

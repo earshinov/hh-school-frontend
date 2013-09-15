@@ -18,8 +18,8 @@ function Popup(popupController, $popup) {
 }
 
 /* Рекомендация, как писать функцию отображения попапа */
-Popup.prototype.show = function($place) {
-	this.popupController.showPopup(this, $place);
+Popup.prototype.show = function($place, placement) {
+	this.popupController.showPopup(this, $place, placement);
 };
 
 /* Функция, возвращающая признак, что пользователь изменил содержимое попапа */
@@ -43,8 +43,8 @@ Popup.prototype.hide = function() {
 function PopupController($popupOverlay) {
 	var popupController = this;
 
-	this.POPUP_POINTER_TOP_OFFSET = 30;
-	this.POPUP_POINTER_WIDTH = 12;
+	this.POPUP_POINTER_OFFSET = 30;
+	this.POPUP_POINTER_SIZE = 12;
 
 	this.overlay = $popupOverlay;
 
@@ -56,35 +56,41 @@ function PopupController($popupOverlay) {
 	});
 }
 
-PopupController.prototype.showPopup = function(popup, $place) {
+PopupController.prototype.showPopup = function(popup, $place, placement) {
 	if (this.popup)
 		throw "Нельзя открыть несколько попапов одновременно";
 
 	var $popup = popup.popup;
 
 	var placeWidth = $place.outerWidth();
+	var placeHeight = $place.outerHeight();
 	var parent = $place.offsetParent();
 	var offset = $place.offset();
 
-	offset.top -= this.POPUP_POINTER_TOP_OFFSET;
-	offset.top += $place.height() / 2;
-
-	$popup.appendTo(parent).css('top', offset.top).show();
+	$popup.appendTo(parent).show();
 	var popupWidth = $popup.outerWidth();
 
-	var leftPlacement = false;
-	if (offset.left + placeWidth + popupWidth > parent.width() && popupWidth < offset.left)
-		leftPlacement = true;
+	if (!placement)
+		placement = (offset.left + placeWidth + popupWidth > parent.width() && popupWidth < offset.left) ? "left" : "right";
 
-	if (leftPlacement) {
-		$popup.removeClass('right');
-		$popup.addClass('left');
-		$popup.css('left', offset.left - popupWidth - this.POPUP_POINTER_WIDTH);
-	}
-	else {
-		$popup.removeClass('left');
-		$popup.addClass('right');
-		$popup.css('left', offset.left + placeWidth + this.POPUP_POINTER_WIDTH);
+	$popup.removeClass('left');
+	$popup.removeClass('right');
+	$popup.removeClass('bottom');
+	$popup.addClass(placement);
+
+	switch (placement) {
+		case "left":
+			$popup.css("left", offset.left - popupWidth - this.POPUP_POINTER_SIZE);
+			$popup.css('top', offset.top - this.POPUP_POINTER_OFFSET + placeHeight / 2);
+			break;
+		case "right":
+			$popup.css("left", offset.left + placeWidth + this.POPUP_POINTER_SIZE);
+			$popup.css('top', offset.top - this.POPUP_POINTER_OFFSET + placeHeight / 2);
+			break;
+		case "bottom":
+			$popup.css("left", offset.left - this.POPUP_POINTER_OFFSET + placeWidth / 2)
+			$popup.css("top", offset.top + placeHeight + this.POPUP_POINTER_SIZE);
+			break;
 	}
 
 	this.overlay.css({

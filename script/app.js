@@ -22,6 +22,17 @@ $( function() {
 	var popupController = new PopupController($("#popup-overlay"));
 	var eventEditorPopup = new EventEditorPopup(popupController, $("#event-editor-popup"));
 
+	$("#add-button").click(function(e) {
+		var event = new EventData(null, "", [], "");
+		eventEditorPopup.show($(e.target), event, {
+			popupPlacement: "bottom",
+			onOK: function(event, originalEvent) {
+				storage.addEvent(event);
+				calendar.updateCell(event.date);
+			}
+		});
+	});
+
 	$("#calendar-table")
 		.bind("event-add", function(e, data) {
 			var event = new EventData(data.date, "", [], "");
