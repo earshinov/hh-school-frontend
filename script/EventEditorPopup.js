@@ -11,6 +11,11 @@ function EventEditorPopup(popupController, $popup) {
 
 	this.popup.keypress(function(e) {
 		if (e.which == 13 /* Enter */) {
+
+			/* нажатие Enter в textarea позволяем обработать браузеру */
+			if ($(e.target).is("textarea"))
+				return;
+
 			$popup.find(".ok-button").click();
 			return false;
 		}
