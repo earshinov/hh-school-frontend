@@ -1,4 +1,7 @@
-﻿function Calendar(storage, $table, $monthName, $cellTemplate, $eventTemplate) {
+﻿/* Calendar - визуальное представление календаря
+================================================ */
+
+function Calendar(storage, $table, $monthName, $cellTemplate, $eventTemplate) {
 	this.storage = storage;
 	this.table = $table;
 	this.monthName = $monthName;
@@ -9,9 +12,19 @@
 	this.firstDate = null; /* первая дата на странице календаря */
 	this.lastDate = null; /* последняя дата на странице календаря */
 
+	/* Кастомное событие event-add
+	   Срабатывает на кнопке добавления нового события (и "всплывает")
+	   Вместе с событием передаются параметры:
+	     date - дата, для которой добавляется событие (объект даты без времени) */
 	this.table.delegate(".add-event-button", "click", function() {
 		$(this).trigger("event-add", { date: $(this).parents("td:first").data("date") });
 	});
+
+	/* Кастомное событие event-edit
+	   Срабатывает при выборе существующего события в календаре
+	   на DOM-элементе, соответствующем этому событию (и "всплывает").
+	   Вместе с событием передаются параметры:
+	     event - редактируемое событие (объект EventData) */
 	this.table.delegate(".event", "click", function() {
 		$(this).trigger("event-edit", { event: $(this).data("event") });
 	});
@@ -23,13 +36,12 @@ Calendar.prototype.setMonth = function(date) {
 	var calendar = this;
 	calendar.table.empty();
 
-	var weeks = CalendarUtils.getCalendarPage(date);
-
 	var today = new Date();
 	var todayTimestamp = new Date(today.getFullYear(), today.getMonth(), today.getDate()).valueOf();
 
-	/* заполнение страницы календаря */
+	var weeks = CalendarUtils.getCalendarPage(date);
 
+	/* заполнение страницы календаря */
 	var firstRow = true;
 	$.each(weeks, function() {
 		var row = $("<tr/>").appendTo(calendar.table);
@@ -57,18 +69,40 @@ Calendar.prototype.setMonth = function(date) {
 	this.monthName.text(Dates.getMonthName(this.month.getMonth()) + " " + this.month.getFullYear());
 };
 
+/* Перейти к предыдущему месяцу в календаре */
 Calendar.prototype.prevMonth = function() {
 	if (this.month == null)
 		throw "Календарь не проинициализирован";
-	this.setMonth(Dates.prevMonth(this.month));
+
+	if (this.month.getMonth() == 0) {
+		this.month.setMonth(11);
+		this.month.setYear(this.month.getFullYear() - 1);
+	}
+	else
+		this.month.setMonth(this.month.getMonth() - 1);
+
+	this.setMonth(this.month);
 };
 
+/* Перейти к следующему месяцу в календаре */
 Calendar.prototype.nextMonth = function() {
 	if (this.month == null)
 		throw "Календарь не проинициализирован";
-	this.setMonth(Dates.nextMonth(this.month));
+
+	if (this.month.getMonth() == 11) {
+		this.month.setMonth(0);
+		this.month.setYear(this.month.getFullYear() + 1);
+	}
+	else
+		this.month.setMonth(this.month.getMonth() + 1);
+
+	this.setMonth(this.month);
 };
 
+/* Обновить ячейку календаря, заново считав данные о событиях на эту дату из storage
+   date - Дата (объект даты без времени)
+   cell - Опционально, ячейка календаря, соответствующая этой дате.
+          Если не передана, определяется автоматически */
 Calendar.prototype.updateCell = function(date, cell) {
 	if (cell === undefined) {
 		cell = this.cellByDate(date);
@@ -90,6 +124,10 @@ Calendar.prototype.updateCell = function(date, cell) {
 	});
 };
 
+/* Получить ячейку календаря, соответствующую указанной дате
+   date - Дата (объект даты без времени)
+   Результат - <td> обёрнутый в объект jQuery или null,
+               если дата не присутствует на текущей странице календаря */
 Calendar.prototype.cellByDate = function(date) {
 	var cell = this.table.find("td").eq((date.valueOf() - this.firstDate.valueOf()) / Dates.MILLISECONDS_PER_DAY);
 	return cell.length > 0 ? cell : null;

@@ -116,36 +116,18 @@ var Dates = {
 		return this.DAY_NAMES[day];
 	},
 
+	/* Клонирование объекты даты */
 	clone: function(date) {
 		return new Date(date.valueOf());
 	},
 
-	prevMonth: function(date) {
-		date = this.clone(date);
-		if (date.getMonth() == 0) {
-			date.setYear(date.getFullYear() - 1);
-			date.setMonth(11);
-		}
-		else
-			date.setMonth(date.getMonth() - 1);
-		return date;
-	},
-
-	nextMonth: function(date) {
-		date = this.clone(date);
-		if (date.getMonth() == 11) {
-			date.setYear(date.getFullYear() + 1);
-			date.setMonth(0);
-		}
-		else
-			date.setMonth(date.getMonth() + 1);
-		return date;
-	},
-
+	/* Форматировать дату для отображения пользователю */
 	format: function(date) {
 		return date.getDate() + " " + this.MONTH_NAMES_2[date.getMonth()] + " " + date.getFullYear();
 	},
 
+	/* Распарсить строку с датой, введённую пользователем.
+       Результат - объект даты или null, если строка невалидная */
 	parse: function(s) {
 		s = s.trim();
 		if (!s)

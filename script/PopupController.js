@@ -1,44 +1,8 @@
-/* Базовый класс попапа */
-function Popup(popupController, $popup) {
-	var popup = this;
-
-	this.popupController = popupController;
-	this.popup = $popup;
-
-	this.popup.keydown(function(e) {
-		if (e.which == 27 /* Esc */) {
-			popup.close();
-			return false;
-		}
-	});
-
-	this.popup.find(".popup-close").click(function() {
-		popup.close();
-	});
-}
-
-/* Рекомендация, как писать функцию отображения попапа */
-Popup.prototype.show = function($place, placement) {
-	this.popupController.showPopup(this, $place, placement);
-};
-
-/* Функция, возвращающая признак, что пользователь изменил содержимое попапа */
-Popup.prototype.isModified = function() {
-	return false;
-};
-
-/* Закрыть попап, запросив подтверждение пользователя в случае наличия изменений */
-Popup.prototype.close = function() {
-	if (this.isModified() && !confirm("Внесённые изменения не будут сохранены.  Продолжить?"))
-		return;
-	this.hide();
-};
-
-/* Закрыть попап без подтверждения */
-Popup.prototype.hide = function() {
-	this.popupController.hidePopup();
-};
-
+/* PopupController - компонент, управляющий отображением попапов на странице.
+   В частности, обеспечивает, что:
+     - единовременно может быть открыт только один попап
+     - по клику в документе текущий попап закрывается (для этого в DOM-дереве предусмотрен элемент overlay)
+=========================================================================================================== */
 
 function PopupController($popupOverlay) {
 	var popupController = this;
@@ -56,6 +20,11 @@ function PopupController($popupOverlay) {
 	});
 }
 
+/* Отобразить попап
+   popup - объект Popup
+   $place - DOM-элемент, к которому приаттачить попап
+   placement - опциональное расположение попапа - строка left | right | bottom
+               Если не передано, автоматически выбирается left | right */
 PopupController.prototype.showPopup = function(popup, $place, placement) {
 	if (this.popup)
 		throw "Нельзя открыть несколько попапов одновременно";
@@ -101,6 +70,7 @@ PopupController.prototype.showPopup = function(popup, $place, placement) {
 	this.popup = popup;
 };
 
+/* Скрыть текущий попап */
 PopupController.prototype.hidePopup = function() {
 	if (this.popup) {
 		this.popup.popup.hide();
