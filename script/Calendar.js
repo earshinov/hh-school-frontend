@@ -72,12 +72,15 @@ Calendar.prototype.updateCell = function(date, cell) {
 
 	var calendar = this;
 
-	var events = cell.find(".events");
-	events.empty();
-	$.each(this.storage.getEventsForDay(date), function() {
+	var $events = cell.find(".events");
+	$events.empty();
+
+	var events = this.storage.getEventsForDay(date);
+	cell.toggleClass("with-events", events.length > 0);
+	$.each(events, function() {
 		var event = calendar._renderEvent(this);
 		event.data("event", this);
-		event.appendTo(events);
+		event.appendTo($events);
 	});
 };
 

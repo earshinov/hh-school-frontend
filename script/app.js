@@ -40,9 +40,9 @@ $( function() {
 		.bind("event-add", function(e, data) {
 			var event = new EventData(data.date, "", [], "");
 
-			// проставляем класс, чтобы оставить видимой кнопку добавления события
 			var cell = $(e.target).parents("td:first");
 			cell.addClass("hover");
+			cell.addClass("active");
 
 			eventEditorPopup.show($(e.target), event, {
 				onOK: function(event, originalEvent) {
@@ -51,10 +51,14 @@ $( function() {
 				},
 				onHide: function() {
 					cell.removeClass("hover");
+					cell.removeClass("active");
 				}
 			});
 		})
 		.bind("event-edit", function(e, data) {
+			var cell = $(e.target).parents("td:first");
+			cell.addClass("active");
+
 			eventEditorPopup.show($(e.target), data.event, {
 				onOK: function(event, originalEvent) {
 					storage.updateEvent(originalEvent, event);
@@ -65,6 +69,9 @@ $( function() {
 				onRemove: function(event) {
 					storage.removeEvent(event);
 					calendar.updateCell(event.date);
+				},
+				onHide: function() {
+					cell.removeClass("active");
 				}
 			});
 		});

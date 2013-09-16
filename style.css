@@ -143,6 +143,10 @@ textarea.placeholder {
     padding: 10px;
     vertical-align: top;
 }
+#calendar-table td.with-events,
+#calendar-table td.active {
+    background: #C2E4FE;
+}
 #calendar-table .event {
     font-size: 11px;
     margin: 5px 0;
