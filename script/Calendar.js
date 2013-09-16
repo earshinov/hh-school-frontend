@@ -25,7 +25,11 @@ Calendar.prototype.setMonth = function(date) {
 
 	var weeks = CalendarUtils.getCalendarPage(date);
 
+	var today = new Date();
+	var todayTimestamp = new Date(today.getFullYear(), today.getMonth(), today.getDate()).valueOf();
+
 	/* заполнение страницы календаря */
+
 	var firstRow = true;
 	$.each(weeks, function() {
 		var row = $("<tr/>").appendTo(calendar.table);
@@ -38,6 +42,8 @@ Calendar.prototype.setMonth = function(date) {
 			var cell = calendar._renderCell(text);
 			cell.data("date", this);
 			cell.appendTo(row);
+			if (this.valueOf() == todayTimestamp)
+				cell.addClass("today");
 
 			calendar.updateCell(this, cell);
 		});

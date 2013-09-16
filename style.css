@@ -143,6 +143,7 @@ textarea.placeholder {
     padding: 10px;
     vertical-align: top;
 }
+#calendar-table td.today,
 #calendar-table td.with-events,
 #calendar-table td.active {
     background: #C2E4FE;
